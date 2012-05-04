@@ -70,33 +70,10 @@ function bundle_install_with_cache {
   store_bundle_cache
 }
 
-function install_rails_log_stdout {
-  if [ -f $BUILD_DIR/config/environment.rb ]; then
-    PLUG_DIR=$BUILD_DIR/vendor/plugins/rails_log_stdout
-    mkdir -p $PLUG_DIR
-    cd $PLUG_DIR
-    curl https://github.com/ddollar/rails_log_stdout/tarball/master -s -o - | tar xzf - 
-    cd -
-  fi
-}
-
-function install_rails3_server_static_assets {
-  if [ -f $BUILD_DIR/config/application.rb ]; then
-    PLUG_DIR=$BUILD_DIR/vendor/plugins/rails3_server_static_assets
-    mkdir -p $PLUG_DIR
-    cd $PLUG_DIR
-    curl 'https://github.com/pedro/rails3_serve_static_assets/tarball/master' -s -o - | tar xzf - 
-    cd -
-  fi
-}
-
 JRUBY_OPTS="--1.9 -J-Xmx400m"
 VERSION="1.6.7"
 
 download_jruby_and_install_default_gems
 copy_jruby_to_build
 bundle_install_with_cache
-
-# install_rails_log_stdout
-# install_rails3_server_static_assets
 
