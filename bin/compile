@@ -114,6 +114,7 @@ echo -n "-----> Installing Maven 3.0.3....."
   echo " done"
 fi
 
+# copy maven settings file
 MAVEN_SETTINGS_URL="http://s3.amazonaws.com/heroku-jvm-langpack-java/settings.xml"
 
 echo -n "-----> Installing settings.xml....."
