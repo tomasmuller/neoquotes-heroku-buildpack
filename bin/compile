@@ -5,13 +5,25 @@
 set -e
 
 # debug
-#set -x
+set -x
 
 # clean up leaking environment
 unset GIT_DIR
 
+# absolute path
+BIN_DIR=$(cd $(dirname $0); pwd) 
+
+# parse args
 BUILD_DIR=$1
 CACHE_DIR=$2
+
+# bundled gems
+BUNDLE_CACHE=$CACHE_DIR/vendor/bundle
+BUNDLE_DIR=$BUILD_DIR/vendor/bundle
+
+# JRuby options
+JRUBY_OPTS="--1.9 -J-Xmx400m"
+VERSION="1.6.7"
 
 function indent {
   c='s/^/       /'
@@ -42,14 +54,16 @@ function copy_jruby_to_build {
 
 function get_bundle_cache {
   if [ -d $BUNDLE_CACHE ]; then
+    echo "-----> Getting bundle cache"
     mkdir -p $BUNDLE_DIR
     cp -ru $BUNDLE_CACHE/* $BUNDLE_DIR
   fi
 }
 
 function store_bundle_cache {
+  echo "-----> Storing bundle cache"
   mkdir -p $BUNDLE_CACHE
-  cp -ru $BUNDLE_DIR/* $BUNDLE_CACHE
+  cp -ruf $BUNDLE_DIR/* $BUNDLE_CACHE
 }
 
 function bundle_install {
@@ -62,16 +76,10 @@ function bundle_install {
 }
 
 function bundle_install_with_cache {
-  BUNDLE_CACHE=$CACHE_DIR/vendor/bundle
-  BUNDLE_DIR=$BUILD_DIR/vendor/bundle
-
   get_bundle_cache
   bundle_install
   store_bundle_cache
 }
-
-JRUBY_OPTS="--1.9 -J-Xmx400m"
-VERSION="1.6.7"
 
 download_jruby_and_install_default_gems
 copy_jruby_to_build
