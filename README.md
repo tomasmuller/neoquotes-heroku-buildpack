@@ -22,4 +22,4 @@ Release:
 --------
   * Add-on: neo4j:test and shared-database:5mb
   * jruby/bin to $PATH
-  * Environment variables: RACK_ENV, RAILS_ENV and JRUBY_OPTS
+  * Environment variables: RACK_ENV, RAILS_ENV, JRUBY_OPTS, JAVA_OPTS and MAVEN_OPTS.
