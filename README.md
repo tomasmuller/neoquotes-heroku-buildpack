@@ -1,6 +1,6 @@
 # Heroku buildpack for NeoQuotes
 
-Buildpack for [NeoQuotes](https://github.com/tomasmuller/neoquotes) application based on [JRuby](https://github.com/jruby/heroku-buildpack-jruby) and [Java](https://github.com/heroku/heroku-buildpack-java) buildpacks.
+Buildpack for [NeoQuotes](https://github.com/tomasmuller/neoquotes) application, based on [JRuby](https://github.com/jruby/heroku-buildpack-jruby) and [Java](https://github.com/heroku/heroku-buildpack-java) buildpacks.
 
 For more information about Heroku buildpacks, access: [https://devcenter.heroku.com/articles/buildpacks](https://devcenter.heroku.com/articles/buildpacks).
 
