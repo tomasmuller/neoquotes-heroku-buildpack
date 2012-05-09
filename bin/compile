@@ -85,3 +85,70 @@ download_jruby_and_install_default_gems
 copy_jruby_to_build
 bundle_install_with_cache
 
+# ----------------
+# Maven build part
+# ----------------
+
+KEEP_M2_CACHE="true"
+
+if [ ! -d $CACHE_DIR ]; then
+  KEEP_M2_CACHE="false"
+elif [ -f $CACHE_DIR/removeM2Cache ]; then
+  KEEP_M2_CACHE="false"
+fi
+
+if [ "true" == $KEEP_M2_CACHE ]; then
+  logger -p user.notice -t "slugc[$$]" "language_pack_java retain_m2_repo"
+fi
+
+# change to cache dir to install maven
+cd $CACHE_DIR
+
+# install maven with base repository
+MAVEN_URL="http://s3.amazonaws.com/heroku-jvm-langpack-java/maven.tar.gz"
+
+if [ ! -d .maven ]; then
+echo -n "-----> Installing Maven 3.0.3....."
+  curl --silent --max-time 60 --location $MAVEN_URL | tar xz
+  chmod +x .maven/bin/mvn
+  echo " done"
+fi
+
+MAVEN_SETTINGS_URL="http://s3.amazonaws.com/heroku-jvm-langpack-java/settings.xml"
+
+echo -n "-----> Installing settings.xml....."
+if [ -f .m2/settings.xml ]; then
+  rm .m2/settings.xml
+fi
+
+curl --silent --max-time 10 --location $MAVEN_SETTINGS_URL --output .m2/settings.xml
+echo " done"
+
+# change to build dir to run maven
+cd $BUILD_DIR/app/java
+
+export MAVEN_OPTS="-Xmx512m"
+
+# build app
+BUILDCMD="$CACHE_DIR/.maven/bin/mvn -B -Duser.home=$BUILD_DIR/app/java -Dmaven.repo.local=$CACHE_DIR/.m2/repository -s $CACHE_DIR/.m2/settings.xml -DskipTests=true clean install"
+echo "-----> executing $BUILDCMD"
+
+$BUILDCMD 2>&1 | indent
+
+if [ "${PIPESTATUS[*]}" != "0 0" ]; then
+  echo " ! Failed to build app with Maven"
+  exit 1
+fi
+
+# finalize cache
+if [ "false" == $KEEP_M2_CACHE ]; then
+  touch $CACHE_DIR/removeM2Cache
+fi
+
+#copy .m2 and .maven if needed
+if [ "true" == $KEEP_M2_CACHE ]; then
+  for DIR in ".m2" ".maven" ; do
+    cp -r $CACHE_DIR/$DIR $DIR
+  done
+fi
+
