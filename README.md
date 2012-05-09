@@ -1,39 +1,26 @@
-# Heroku buildpack for JRuby
+# Heroku buildpack for NeoQuotes
 
-A buildpack to fast and easy use JRuby on Heroku. Just create a Heroku app like this:
+Buildpack for [NeoQuotes](https://github.com/tomasmuller/neoquotes) application.
 
-    heroku create -s cedar --buildpack https://github.com/jruby/heroku-buildpack-jruby.git 
+For more information about Heroku buildpacks, access: [https://devcenter.heroku.com/articles/buildpacks](https://devcenter.heroku.com/articles/buildpacks).
 
-It will download and unpack JRuby from [jruby.org](http://jruby.org/), install [Bundler](http://gembundler.com/) and run ```bundle install``` and then use your ```Procfile```.
+Detect:
+-------
+Check the existence of a Gemfile in the project root directory.
 
-Example ```Procfile```:
 
-    web: bin/trinidad -t -r -p $PORT -e $RACK_ENV
+Compile:
+--------
+  1. JRuby is downloaded, extracted and configured.
+  2. Default gems are installed (jruby-openssl, bundler and rake). 
+  3. The dependencies are installed with Bundler.
+  4. Maven is downloaded, extracted and configured.
+  5. Finally, a mvn clean install is executed.
 
-Note: You do normally not want to use ```bundle exec``` with JRuby. Use the binstubs (in ```bin/```) instead, and put ```require 'bundler/setup'``` before any other ```require```.
 
-Current JRuby version: 1.6.7
+Release:
+--------
+  * Add-on: neo4j:test and shared-database:5mb
+  * jruby/bin to $PATH
+  * Environment variables: RACK_ENV, RAILS_ENV and JRUBY_OPTS
 
-For now only supports 1.9 mode, open an issue if you need 1.8 mode.
-
-Example application: [github.com/carlhoerberg/heroku-jruby-example](https://github.com/carlhoerberg/heroku-jruby-example)
-
-## Servers
-
-Recommended web servers are:
-
-* [Trinidad](https://github.com/trinidad/trinidad) - A wrapper around [Tomcat](http://tomcat.apache.org/)
-* [Mizuno](https://github.com/matadon/mizuno) - A wrapper around [Jetty](http://jetty.codehaus.org/jetty/)
-* [Puma](http://puma.io) - A server written in Ruby, wraps the Ragel parser (from Mongrel)
-
-A comparison can be found here: [carlhoerberg.github.com/blog/2012/03/31/jruby-application-server-benchmarks/](http://carlhoerberg.github.com/blog/2012/03/31/jruby-application-server-benchmarks/)
-
-## License terms
-
-Copyright (C) 2012 by Carl Hörberg
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
