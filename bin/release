@@ -4,6 +4,7 @@ cat << EOF
 ---
 addons:
   - shared-database:5mb
+  - neo4j:test
 config_vars:
   PATH: bin:jruby/bin:/usr/bin:/bin
   RACK_ENV: production
