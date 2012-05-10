@@ -5,13 +5,13 @@
 set -e
 
 # debug
-set -x
+#set -x
 
 # clean up leaking environment
 unset GIT_DIR
 
 # absolute path
-BIN_DIR=$(cd $(dirname $0); pwd) 
+BIN_DIR=$(cd $(dirname $0); pwd)
 
 # parse args
 BUILD_DIR=$1
@@ -42,7 +42,7 @@ function download_jruby_and_install_default_gems {
     PATH=$CACHE_DIR/jruby-$VERSION/bin:$PATH
 
     echo "-----> Installing JRuby-OpenSSL, Bundler and Rake"
-    jruby $JRUBY_OPTS -S jgem install jruby-openssl bundler rake | indent 
+    jruby $JRUBY_OPTS -S jgem install jruby-openssl bundler rake | indent
   fi
 }
 
@@ -152,4 +152,3 @@ if [ "true" == $KEEP_M2_CACHE ]; then
     cp -r $CACHE_DIR/$DIR $DIR
   done
 fi
-
